@@ -1,0 +1,223 @@
+/* Markdown Renderer Styles */
+.markdown-paragraph {
+  margin: 0 0 12px 0;
+  line-height: 1.7;
+}
+
+.markdown-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+/* Headings */
+.markdown-heading {
+  font-weight: 600;
+  margin: 20px 0 12px 0;
+  line-height: 1.4;
+}
+
+.markdown-h1 {
+  font-size: 24px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 8px;
+}
+
+.markdown-h2 {
+  font-size: 20px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 6px;
+}
+
+.markdown-h3 {
+  font-size: 18px;
+}
+
+.markdown-h4 {
+  font-size: 16px;
+}
+
+/* Lists */
+.markdown-list {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+
+.markdown-ul {
+  list-style-type: disc;
+}
+
+.markdown-ol {
+  list-style-type: decimal;
+}
+
+.markdown-list-item {
+  margin: 6px 0;
+  line-height: 1.6;
+}
+
+/* Code */
+.inline-code {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-size: 0.9em;
+  color: #e83e8c;
+  word-break: break-word;
+}
+
+.message.user .inline-code {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffd700;
+}
+
+.code-block {
+  margin: 16px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.code-block pre {
+  margin: 0;
+  padding: 16px !important;
+  background: #1e1e1e !important;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.code-block code {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+}
+
+/* Blockquote */
+.markdown-blockquote {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-left: 4px solid var(--primary-color);
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.message.user .markdown-blockquote {
+  border-left-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Links */
+.markdown-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.markdown-link:hover {
+  border-bottom-color: var(--primary-color);
+  text-decoration: none;
+}
+
+.message.user .markdown-link {
+  color: #ffd700;
+  border-bottom-color: transparent;
+}
+
+.message.user .markdown-link:hover {
+  border-bottom-color: #ffd700;
+}
+
+/* Tables */
+.markdown-table-wrapper {
+  margin: 16px 0;
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.markdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.markdown-table-head {
+  background: var(--bg-secondary);
+}
+
+.markdown-table-header {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.markdown-table-row {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.markdown-table-row:last-child {
+  border-bottom: none;
+}
+
+.markdown-table-cell {
+  padding: 10px 16px;
+  color: var(--text-primary);
+}
+
+.markdown-table-row:nth-child(even) {
+  background: var(--bg-secondary);
+}
+
+.message.user .markdown-table-wrapper {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.message.user .markdown-table-header {
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.message.user .markdown-table-cell {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.message.user .markdown-table-row:nth-child(even) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Horizontal Rule */
+.markdown-hr {
+  margin: 24px 0;
+  border: none;
+  border-top: 1px solid var(--border-color);
+}
+
+.message.user .markdown-hr {
+  border-top-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Strong and Emphasis */
+.markdown-strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.message.user .markdown-strong {
+  color: rgba(255, 255, 255, 1);
+}
+
+.markdown-em {
+  font-style: italic;
+}
+
+/* Task Lists (from remark-gfm) */
+.markdown-list input[type="checkbox"] {
+  margin-right: 8px;
+  cursor: pointer;
+}
+

@@ -1,0 +1,321 @@
+.sidebar {
+  width: 280px;
+  height: 100%;
+  background: var(--bg-primary);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(10px);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.sidebar.collapsed {
+  width: 72px;
+}
+
+.sidebar-header {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 56px;
+}
+
+.sidebar.collapsed .sidebar-header {
+  justify-content: center;
+  padding: 16px 12px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+
+.menu-button {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  padding: 8px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.menu-button:hover {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+  background: var(--primary-light);
+  transform: scale(1.05);
+}
+
+.sidebar.collapsed .menu-button {
+  width: 100%;
+}
+
+.new-conversation-button {
+  margin: 16px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: var(--transition);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.sidebar.collapsed .new-conversation-button {
+  padding: 12px;
+  margin: 16px 12px;
+  width: auto;
+  min-width: 48px;
+}
+
+.new-conversation-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.new-conversation-button:hover::before {
+  left: 100%;
+}
+
+.new-conversation-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.new-conversation-button:active {
+  transform: translateY(0);
+}
+
+.conversations-section {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 8px;
+}
+
+.sidebar.collapsed .conversations-section {
+  padding: 0 4px;
+}
+
+.section-title {
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sidebar.collapsed .section-title {
+  display: none;
+}
+
+.conversations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.conversation-item {
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: var(--transition);
+  position: relative;
+  margin: 0 8px;
+}
+
+.sidebar.collapsed .conversation-item {
+  padding: 12px;
+  margin: 0 4px;
+  justify-content: center;
+}
+
+.conversation-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border-radius: 0 2px 2px 0;
+  transition: height 0.2s;
+}
+
+.conversation-item:hover {
+  background-color: var(--bg-secondary);
+  transform: translateX(2px);
+}
+
+.conversation-item.active {
+  background: linear-gradient(90deg, var(--primary-light), transparent);
+  box-shadow: var(--shadow-sm);
+}
+
+.conversation-item.active::before {
+  height: 60%;
+}
+
+.sidebar.collapsed .conversation-item.active::before {
+  width: 3px;
+  height: 100%;
+  left: 0;
+  top: 0;
+  transform: none;
+}
+
+.conversation-icon {
+  color: #666;
+  flex-shrink: 0;
+}
+
+.sidebar.collapsed .conversation-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.conversation-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar.collapsed .conversation-content {
+  display: none;
+}
+
+.conversation-title {
+  font-size: 14px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.conversation-item.active .conversation-title {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.conversation-meta {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.delete-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  color: var(--text-tertiary);
+  opacity: 0;
+  transition: var(--transition);
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar.collapsed .delete-button {
+  display: none;
+}
+
+.conversation-item:hover .delete-button {
+  opacity: 1;
+}
+
+.delete-button:hover {
+  color: var(--danger-color);
+  background-color: rgba(239, 68, 68, 0.1);
+  transform: scale(1.1);
+}
+
+.empty-state {
+  padding: 32px 16px;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
+.sidebar.collapsed .empty-state {
+  display: none;
+}
+
+.sidebar-footer {
+  padding: 16px;
+}
+
+.sidebar.collapsed .sidebar-footer {
+  padding: 16px 12px;
+}
+
+.settings-button {
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #666;
+  font-size: 14px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.sidebar.collapsed .settings-button {
+  padding: 12px;
+  justify-content: center;
+}
+
+.settings-button:hover {
+  background-color: #f5f5f5;
+}
+
