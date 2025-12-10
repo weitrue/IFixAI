@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="30" fill="url(#gradient)" />
+  
+  <!-- Main icon: Simplified AI/Neural network - Modern and tech -->
+  <g transform="translate(32, 32)" fill="white" stroke="white" stroke-width="2" stroke-linecap="round">
+    <!-- Central core (AI brain) -->
+    <circle cx="0" cy="0" r="6" fill="white" />
+    
+    <!-- Neural network nodes (simplified) -->
+    <circle cx="-11" cy="-6" r="3.5" fill="white" />
+    <circle cx="11" cy="-6" r="3.5" fill="white" />
+    <circle cx="11" cy="6" r="3.5" fill="white" />
+    <circle cx="-11" cy="6" r="3.5" fill="white" />
+    
+    <!-- Connection lines (neural pathways) -->
+    <line x1="0" y1="0" x2="-11" y2="-6" stroke-width="2.5" opacity="0.9" />
+    <line x1="0" y1="0" x2="11" y2="-6" stroke-width="2.5" opacity="0.9" />
+    <line x1="0" y1="0" x2="11" y2="6" stroke-width="2.5" opacity="0.9" />
+    <line x1="0" y1="0" x2="-11" y2="6" stroke-width="2.5" opacity="0.9" />
+    
+    <!-- Cross connections (network intelligence) -->
+    <line x1="-11" y1="-6" x2="11" y2="-6" stroke-width="1.5" opacity="0.6" />
+    <line x1="11" y1="-6" x2="11" y2="6" stroke-width="1.5" opacity="0.6" />
+    <line x1="-11" y1="6" x2="11" y2="6" stroke-width="1.5" opacity="0.6" />
+  </g>
+</svg>
+

@@ -1,0 +1,343 @@
+.toolbox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+  height: 100%;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.toolbox-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-secondary);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.toolbox-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  border-radius: var(--radius-sm);
+}
+
+.close-button:hover {
+  color: #333;
+  background: var(--bg-tertiary);
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.back-button:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.toolbox-tool-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbox-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+}
+
+.toolbox-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.toolbox-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.toolbox-content::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+.toolbox-content::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+.toolbox-description {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tool-item {
+  padding: 24px;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background: var(--bg-primary);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.tool-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.2;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: var(--radius-lg);
+}
+
+.tool-item:hover .tool-background {
+  opacity: 0.3;
+  transform: scale(1.02);
+}
+
+.tool-icon,
+.tool-info {
+  position: relative;
+  z-index: 1;
+}
+
+.tool-item:hover {
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.tool-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+}
+
+.tool-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.tool-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.tool-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* 代码格式化工具背景 */
+.tool-item-code-formatter .tool-background {
+  background: 
+    linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(255, 255, 255, 0.05) 10px,
+      rgba(255, 255, 255, 0.05) 20px
+    );
+  background-size: 100% 100%, 20px 20px;
+}
+
+/* 文本转换工具背景 */
+.tool-item-text-converter .tool-background {
+  background: 
+    linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%),
+    radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(96, 165, 250, 0.3) 0%, transparent 50%);
+  background-size: 100% 100%, 200px 200px, 200px 200px;
+}
+
+/* 图片处理工具背景 */
+.tool-item-image-processor .tool-background {
+  background: 
+    linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #f9a8d4 100%),
+    repeating-conic-gradient(
+      from 0deg at 50% 50%,
+      transparent 0deg,
+      rgba(255, 255, 255, 0.05) 10deg,
+      transparent 20deg
+    );
+  background-size: 100% 100%, 40px 40px;
+}
+
+/* 数据分析工具背景 */
+.tool-item-data-analyzer .tool-background {
+  background: 
+    linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%),
+    linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%),
+    linear-gradient(0deg, transparent 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%);
+  background-size: 100% 100%, 30px 100%, 100% 30px;
+}
+
+/* API 测试工具背景 */
+.tool-item-api-tester .tool-background {
+  background: 
+    linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #fcd34d 100%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.05) 2px,
+      rgba(255, 255, 255, 0.05) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.05) 2px,
+      rgba(255, 255, 255, 0.05) 4px
+    );
+  background-size: 100% 100%, 100% 100%, 100% 100%;
+}
+
+/* JSON 格式化工具背景 */
+.tool-item-json-formatter .tool-background {
+  background: 
+    linear-gradient(135deg, #8b5cf6 0%, #a78bfa 50%, #c4b5fd 100%),
+    repeating-linear-gradient(
+      135deg,
+      transparent,
+      transparent 15px,
+      rgba(255, 255, 255, 0.05) 15px,
+      rgba(255, 255, 255, 0.05) 30px
+    );
+  background-size: 100% 100%, 30px 30px;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .toolbox {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+  }
+
+  .toolbox-header {
+    padding: 12px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .toolbox-header h2 {
+    font-size: 18px;
+  }
+
+  .toolbox-content {
+    padding: 12px 16px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .toolbox-content::-webkit-scrollbar {
+    display: none;
+  }
+
+  .toolbox-description {
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .tools-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .tool-item {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .tool-background {
+    opacity: 0.12;
+  }
+
+  .tool-item:hover .tool-background {
+    opacity: 0.2;
+  }
+
+  .tool-icon {
+    font-size: 28px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .tool-name {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+
+  .tool-description {
+    font-size: 13px;
+  }
+}
+

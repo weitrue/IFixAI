@@ -198,7 +198,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
     gemini: 'Gemini',
     claude: 'Claude',
     qwen: 'Qwen Code',
-    gpt: 'GPT-4',
+    gpt: 'GPT',
   };
 
   return (

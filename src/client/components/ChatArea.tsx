@@ -13,6 +13,8 @@ interface ChatAreaProps {
   onModelChange: (model: string) => void;
   onCreateConversation: (agentType: 'gemini' | 'claude' | 'qwen' | 'gpt', model?: string) => void;
   connectionStatus: 'connected' | 'disconnected';
+  isMobile?: boolean;
+  onToggleSidebar?: () => void;
 }
 
 const ChatArea: React.FC<ChatAreaProps> = ({
@@ -25,6 +27,8 @@ const ChatArea: React.FC<ChatAreaProps> = ({
   onModelChange,
   onCreateConversation,
   connectionStatus,
+  isMobile = false,
+  onToggleSidebar,
 }) => {
   const [inputValue, setInputValue] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -369,7 +373,18 @@ const ChatArea: React.FC<ChatAreaProps> = ({
 
   if (!conversation) {
     return (
-      <div className="chat-area empty">
+      <div className={`chat-area empty ${isMobile ? 'mobile' : ''}`}>
+        {isMobile && onToggleSidebar && (
+          <div className="chat-header mobile-header">
+            <button className="mobile-menu-button" onClick={onToggleSidebar} aria-label="打开菜单">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        )}
         <div className="empty-content">
           <div className="welcome-section">
             <h2>今天有什么安排?</h2>
@@ -530,8 +545,17 @@ const ChatArea: React.FC<ChatAreaProps> = ({
   }
 
   return (
-    <div className="chat-area">
+    <div className={`chat-area ${isMobile ? 'mobile' : ''}`}>
       <div className="chat-header">
+        {isMobile && onToggleSidebar && (
+          <button className="mobile-menu-button" onClick={onToggleSidebar} aria-label="打开菜单">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        )}
         <div className="agent-selector">
           <select
             value={selectedAgent}
@@ -562,13 +586,15 @@ const ChatArea: React.FC<ChatAreaProps> = ({
             <span className={`status-dot ${connectionStatus}`}></span>
             <span>{connectionStatus === 'connected' ? '已连接' : '未连接'}</span>
           </div>
-          <button className="save-button" aria-label="保存">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-              <polyline points="17 21 17 13 7 13 7 21"></polyline>
-              <polyline points="7 3 7 8 15 8"></polyline>
-            </svg>
-          </button>
+          {!isMobile && (
+            <button className="save-button" aria-label="保存">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+            </button>
+          )}
         </div>
       </div>
 

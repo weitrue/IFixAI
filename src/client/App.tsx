@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import ChatArea from './components/ChatArea';
 import Settings from './components/Settings';
+import Toolbox from './components/Toolbox';
 import { Conversation, Message, ApiKey } from './types';
 import './styles/App.css';
 
@@ -12,8 +13,11 @@ function App() {
   const [selectedAgent, setSelectedAgent] = useState<'gemini' | 'claude' | 'qwen' | 'gpt'>('gemini');
   const [selectedModel, setSelectedModel] = useState<string>('');
   const [showSettings, setShowSettings] = useState(false);
+  const [showToolbox, setShowToolbox] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'disconnected'>('disconnected');
+  const [isMobile, setIsMobile] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
     // Check connection
@@ -23,6 +27,22 @@ function App() {
 
     // Load conversations
     loadConversations();
+
+    // Detect mobile device
+    const checkMobile = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      if (mobile) {
+        setShowSidebar(false);
+        setSidebarCollapsed(false);
+      } else {
+        setShowSidebar(true);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   useEffect(() => {
@@ -76,6 +96,10 @@ function App() {
   const selectConversation = async (conversation: Conversation) => {
     setCurrentConversation(conversation);
     setSelectedAgent(conversation.agent_type as 'gemini' | 'claude' | 'qwen' | 'gpt');
+    // On mobile, close sidebar after selecting conversation
+    if (isMobile) {
+      setShowSidebar(false);
+    }
     // Load models for the agent and set the model
     try {
       const response = await fetch(`/api/models/${conversation.agent_type}`);
@@ -295,20 +319,52 @@ function App() {
     }
   };
 
+  const handleSave = () => {
+    if (!currentConversation) {
+      alert('请先选择一个对话');
+      return;
+    }
+    // 这里可以实现保存功能，比如导出对话、保存到本地等
+    // 目前先显示一个提示
+    alert('对话已保存');
+  };
+
   return (
     <div className="app">
+      {isMobile && showSidebar && (
+        <div 
+          className="sidebar-overlay" 
+          onClick={() => setShowSidebar(false)}
+        />
+      )}
       <Sidebar
         conversations={conversations}
         currentConversation={currentConversation}
         onNewConversation={createNewConversation}
         onSelectConversation={selectConversation}
         onDeleteConversation={deleteConversation}
-        onOpenSettings={() => setShowSettings(true)}
+        onOpenSettings={() => {
+          setShowSettings(false);
+          setShowToolbox(false);
+          setShowSettings(true);
+          if (isMobile) setShowSidebar(false);
+        }}
+        onOpenToolbox={() => {
+          setShowSettings(false);
+          setShowToolbox(true);
+          if (isMobile) setShowSidebar(false);
+        }}
         collapsed={sidebarCollapsed}
         onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        isMobile={isMobile}
+        showSidebar={showSidebar}
+        onCloseSidebar={() => setShowSidebar(false)}
+        onSave={handleSave}
       />
       {showSettings ? (
         <Settings onClose={() => setShowSettings(false)} />
+      ) : showToolbox ? (
+        <Toolbox onClose={() => setShowToolbox(false)} />
       ) : (
         <ChatArea
           conversation={currentConversation}
@@ -320,6 +376,8 @@ function App() {
           onModelChange={setSelectedModel}
           onCreateConversation={createNewConversation}
           connectionStatus={connectionStatus}
+          isMobile={isMobile}
+          onToggleSidebar={() => setShowSidebar(!showSidebar)}
         />
       )}
     </div>

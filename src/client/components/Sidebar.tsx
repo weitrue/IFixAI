@@ -9,8 +9,13 @@ interface SidebarProps {
   onSelectConversation: (conversation: Conversation) => void;
   onDeleteConversation: (id: string) => void;
   onOpenSettings: () => void;
+  onOpenToolbox?: () => void;
   collapsed: boolean;
   onToggleCollapse: () => void;
+  isMobile?: boolean;
+  showSidebar?: boolean;
+  onCloseSidebar?: () => void;
+  onSave?: () => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -20,8 +25,13 @@ const Sidebar: React.FC<SidebarProps> = ({
   onSelectConversation,
   onDeleteConversation,
   onOpenSettings,
+  onOpenToolbox,
   collapsed,
   onToggleCollapse,
+  isMobile = false,
+  showSidebar = true,
+  onCloseSidebar,
+  onSave,
 }) => {
   const handleNewConversation = () => {
     // Default to Gemini for new conversations
@@ -41,24 +51,34 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
+    <div className={`sidebar ${collapsed ? 'collapsed' : ''} ${isMobile ? 'mobile' : ''} ${isMobile && !showSidebar ? 'hidden' : ''}`}>
       <div className="sidebar-header">
         {!collapsed && (
           <div className="logo">
             <span className="logo-text">IFixAI</span>
           </div>
         )}
-        <button className="menu-button" onClick={onToggleCollapse} aria-label={collapsed ? "展开" : "收起"}>
-          {collapsed ? (
+        {isMobile && onCloseSidebar && (
+          <button className="close-sidebar-button" onClick={onCloseSidebar} aria-label="关闭">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="9 18 15 12 9 6"></polyline>
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
-          ) : (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          )}
-        </button>
+          </button>
+        )}
+        {!isMobile && (
+          <button className="menu-button" onClick={onToggleCollapse} aria-label={collapsed ? "展开" : "收起"}>
+            {collapsed ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            )}
+          </button>
+        )}
       </div>
 
       <button className="new-conversation-button" onClick={handleNewConversation} title={collapsed ? "发起新对话" : ""}>
@@ -68,6 +88,22 @@ const Sidebar: React.FC<SidebarProps> = ({
         </svg>
         {!collapsed && <span>发起新对话</span>}
       </button>
+
+      {onOpenToolbox && (
+        <button 
+          className="toolbox-button" 
+          onClick={onOpenToolbox} 
+          title={collapsed ? "Gems" : ""}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+          {!collapsed && <span>Gems</span>}
+        </button>
+      )}
 
       <div className="conversations-section">
         {!collapsed && <h3 className="section-title">近期对话</h3>}
@@ -122,6 +158,20 @@ const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       <div className="sidebar-footer">
+        {isMobile && onSave && (
+          <button 
+            className="sidebar-save-button" 
+            onClick={onSave} 
+            title={collapsed ? "保存" : ""}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+              <polyline points="17 21 17 13 7 13 7 21"></polyline>
+              <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+            {!collapsed && <span>保存对话</span>}
+          </button>
+        )}
         <button className="settings-button" onClick={onOpenSettings} title={collapsed ? "设置和帮助" : ""}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="12" cy="12" r="3"></circle>
