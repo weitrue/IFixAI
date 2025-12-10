@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import TextConverter from './toolbox/TextConverter';
+import JSONFormatter from './toolbox/JSONFormatter';
 import '../styles/components/Toolbox.css';
 
 interface ToolboxProps {
@@ -11,16 +12,22 @@ const Toolbox: React.FC<ToolboxProps> = ({ onClose }) => {
 
   const tools = [
     {
-      id: 'code-formatter',
-      name: '代码格式化',
-      icon: '💻',
-      description: '格式化各种编程语言代码',
-    },
-    {
       id: 'text-converter',
       name: '文本转换',
       icon: '📝',
       description: '大小写转换、编码转换等',
+    },
+    {
+      id: 'json-formatter',
+      name: 'JSON 格式化',
+      icon: '📄',
+      description: 'JSON 编码处理、验证等',
+    },
+    {
+      id: 'code-formatter',
+      name: '代码格式化',
+      icon: '💻',
+      description: '格式化各种编程语言代码',
     },
     {
       id: 'image-processor',
@@ -40,12 +47,6 @@ const Toolbox: React.FC<ToolboxProps> = ({ onClose }) => {
       icon: '🔌',
       description: '测试和调试 API 接口',
     },
-    {
-      id: 'json-formatter',
-      name: 'JSON 格式化',
-      icon: '📄',
-      description: 'JSON 格式化、验证和美化',
-    },
   ];
 
   const handleToolClick = (toolId: string) => {
@@ -56,7 +57,7 @@ const Toolbox: React.FC<ToolboxProps> = ({ onClose }) => {
     setSelectedTool(null);
   };
 
-  // 如果选择了文本转换工具，直接显示该工具
+  // 如果选择了工具，显示对应的工具页面
   if (selectedTool === 'text-converter') {
     return (
       <div className="toolbox">
@@ -76,6 +77,30 @@ const Toolbox: React.FC<ToolboxProps> = ({ onClose }) => {
         </div>
         <div className="toolbox-tool-content">
           <TextConverter />
+        </div>
+      </div>
+    );
+  }
+
+  if (selectedTool === 'json-formatter') {
+    return (
+      <div className="toolbox">
+        <div className="toolbox-header">
+          <button className="back-button" onClick={handleBack}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            <span>返回</span>
+          </button>
+          <button className="close-button" onClick={onClose}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div className="toolbox-tool-content">
+          <JSONFormatter />
         </div>
       </div>
     );
