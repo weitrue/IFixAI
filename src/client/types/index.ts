@@ -2,6 +2,7 @@ export interface Conversation {
   id: string;
   title: string;
   agent_type: string;
+  model?: string | null;
   created_at: number;
   updated_at: number;
 }
@@ -17,7 +18,7 @@ export interface Message {
 
 export interface ApiKey {
   id: string;
-  agent_type: 'gemini' | 'claude' | 'qwen';
+  agent_type: 'gemini' | 'claude' | 'qwen' | 'gpt' | 'cursor';
   key_name: string;
   is_active: number;
   created_at: number;

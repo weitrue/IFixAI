@@ -1,7 +1,8 @@
 /* Markdown Renderer Styles */
 .markdown-paragraph {
-  margin: 0 0 12px 0;
-  line-height: 1.7;
+  margin: 0 0 14px 0;
+  line-height: 1.75;
+  color: inherit;
 }
 
 .markdown-paragraph:last-child {
@@ -56,55 +57,90 @@
 
 /* Code */
 .inline-code {
-  background: rgba(0, 0, 0, 0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.08);
+  padding: 3px 7px;
+  border-radius: 5px;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
   font-size: 0.9em;
   color: #e83e8c;
   word-break: break-word;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  font-weight: 500;
 }
 
 .message.user .inline-code {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
   color: #ffd700;
+  border-color: rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .code-block {
-  margin: 16px 0;
-  border-radius: 8px;
+  margin: 18px 0;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.12),
+    0 2px 4px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease;
+}
+
+.code-block:hover {
+  box-shadow: 
+    0 6px 16px rgba(0, 0, 0, 0.15),
+    0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
 .code-block pre {
   margin: 0;
-  padding: 16px !important;
+  padding: 18px !important;
   background: #1e1e1e !important;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
   overflow-x: auto;
+  color: #d4d4d4;
 }
 
 .code-block code {
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-size: 13.5px;
+}
+
+.message.user .code-block {
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.2),
+    0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 /* Blockquote */
 .markdown-blockquote {
-  margin: 16px 0;
-  padding: 12px 16px;
+  margin: 18px 0;
+  padding: 14px 18px;
   border-left: 4px solid var(--primary-color);
   background: var(--bg-secondary);
-  border-radius: 4px;
+  border-radius: 6px;
   color: var(--text-secondary);
   font-style: italic;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.markdown-blockquote:hover {
+  background: var(--bg-hover);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .message.user .markdown-blockquote {
-  border-left-color: rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.9);
+  border-left-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.message.user .markdown-blockquote:hover {
+  background: rgba(255, 255, 255, 0.18);
 }
 
 /* Links */
@@ -113,20 +149,25 @@
   text-decoration: none;
   border-bottom: 1px solid transparent;
   transition: all 0.2s ease;
+  font-weight: 500;
+  position: relative;
 }
 
 .markdown-link:hover {
   border-bottom-color: var(--primary-color);
   text-decoration: none;
+  color: var(--secondary-color);
 }
 
 .message.user .markdown-link {
   color: #ffd700;
   border-bottom-color: transparent;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .message.user .markdown-link:hover {
   border-bottom-color: #ffd700;
+  color: #ffed4e;
 }
 
 /* Tables */

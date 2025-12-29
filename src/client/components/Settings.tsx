@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ApiKey } from '../types';
+import { api } from '../utils/api';
+import { extractData } from '../utils/response';
 import '../styles/components/Settings.css';
 
 interface SettingsProps {
@@ -8,7 +10,7 @@ interface SettingsProps {
 
 interface AgentModel {
   id: string;
-  agent_type: 'gemini' | 'claude' | 'qwen' | 'gpt';
+  agent_type: 'gemini' | 'claude' | 'qwen' | 'gpt' | 'cursor';
   model_value: string;
   model_label: string;
   is_default: number;
@@ -21,7 +23,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState<'api-keys' | 'models'>('api-keys');
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [models, setModels] = useState<AgentModel[]>([]);
-  const [selectedAgent, setSelectedAgent] = useState<'gemini' | 'claude' | 'qwen' | 'gpt'>('gemini');
+  const [selectedAgent, setSelectedAgent] = useState<'gemini' | 'claude' | 'qwen' | 'gpt' | 'cursor'>('cursor');
   const [showAddForm, setShowAddForm] = useState(false);
   const [newKeyName, setNewKeyName] = useState('');
   const [newApiKey, setNewApiKey] = useState('');
@@ -40,9 +42,10 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
 
   const loadApiKeys = async () => {
     try {
-      const response = await fetch(`/api/settings/api-keys/${selectedAgent}`);
-      const data = await response.json();
-      setApiKeys(data);
+      const response = await fetch(api(`api/settings/api-keys/${selectedAgent}`));
+      const result = await response.json();
+      const data = extractData(result);
+      setApiKeys(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Failed to load API keys:', error);
     }
@@ -50,9 +53,10 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
 
   const loadModels = async () => {
     try {
-      const response = await fetch(`/api/models/${selectedAgent}`);
-      const data = await response.json();
-      setModels(data);
+      const response = await fetch(api(`api/models/${selectedAgent}`));
+      const result = await response.json();
+      const data = extractData(result);
+      setModels(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Failed to load models:', error);
     }
@@ -65,7 +69,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
     }
 
     try {
-      const response = await fetch('/api/settings/api-keys', {
+      const response = await fetch(api('api/settings/api-keys'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -77,7 +81,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to add API key');
+        throw new Error(error.message || error.error || 'Failed to add API key');
       }
 
       setNewKeyName('');
@@ -91,7 +95,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
 
   const handleToggleActive = async (id: string, isActive: number) => {
     try {
-      await fetch(`/api/settings/api-keys/${id}`, {
+      await fetch(api(`api/settings/api-keys/${id}`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -108,7 +112,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
     if (!window.confirm('确定要删除这个API密钥吗？')) return;
 
     try {
-      await fetch(`/api/settings/api-keys/${id}`, {
+      await fetch(api(`api/settings/api-keys/${id}`), {
         method: 'DELETE',
       });
       loadApiKeys();
@@ -124,7 +128,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
     }
 
     try {
-      const response = await fetch('/api/models', {
+      const response = await fetch(api('api/models'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -138,7 +142,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to add model');
+        throw new Error(error.message || error.error || 'Failed to add model');
       }
 
       setNewModelValue('');
@@ -153,7 +157,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
 
   const handleToggleModelActive = async (id: string, isActive: number) => {
     try {
-      await fetch(`/api/models/${id}`, {
+      await fetch(api(`api/models/${id}`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -168,7 +172,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
 
   const handleSetDefaultModel = async (id: string) => {
     try {
-      await fetch(`/api/models/${id}`, {
+      await fetch(api(`api/models/${id}`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -185,7 +189,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
     if (!window.confirm('确定要删除这个模型吗？')) return;
 
     try {
-      await fetch(`/api/models/${id}`, {
+      await fetch(api(`api/models/${id}`), {
         method: 'DELETE',
       });
       loadModels();
@@ -199,6 +203,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
     claude: 'Claude',
     qwen: 'Qwen Code',
     gpt: 'GPT',
+    cursor: 'Cursor',
   };
 
   return (
@@ -235,7 +240,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
             <p className="section-description">为每个 AI Agent 添加和管理 API 密钥</p>
 
             <div className="agent-tabs">
-            {(['gemini', 'claude', 'qwen', 'gpt'] as const).map((agent) => (
+            {(['cursor', 'gemini', 'claude', 'qwen', 'gpt'] as const).map((agent) => (
               <button
                 key={agent}
                 className={`agent-tab ${selectedAgent === agent ? 'active' : ''}`}
@@ -328,7 +333,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
             <p className="section-description">为每个 AI Agent 配置可用的模型列表</p>
 
             <div className="agent-tabs">
-              {(['gemini', 'claude', 'qwen', 'gpt'] as const).map((agent) => (
+              {(['cursor', 'gemini', 'claude', 'qwen', 'gpt'] as const).map((agent) => (
                 <button
                   key={agent}
                   className={`agent-tab ${selectedAgent === agent ? 'active' : ''}`}

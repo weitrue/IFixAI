@@ -42,8 +42,8 @@ router.post('/api-keys', (req: Request, res: Response) => {
       return res.status(400).json({ error: 'agentType, keyName, and apiKey are required' });
     }
 
-    if (!['gemini', 'claude', 'qwen', 'gpt'].includes(agentType)) {
-      return res.status(400).json({ error: 'Invalid agentType. Must be gemini, claude, qwen, or gpt' });
+    if (!['gemini', 'claude', 'qwen', 'gpt', 'cursor'].includes(agentType)) {
+      return res.status(400).json({ error: 'Invalid agentType. Must be gemini, claude, qwen, gpt, or cursor' });
     }
 
     const db = getDatabase();

@@ -5,7 +5,7 @@ import '../styles/components/Sidebar.css';
 interface SidebarProps {
   conversations: Conversation[];
   currentConversation: Conversation | null;
-  onNewConversation: (agentType: 'gemini' | 'claude' | 'qwen' | 'gpt') => void;
+  onNewConversation: (agentType: 'gemini' | 'claude' | 'qwen' | 'gpt' | 'cursor') => void;
   onSelectConversation: (conversation: Conversation) => void;
   onDeleteConversation: (id: string) => void;
   onOpenSettings: () => void;
@@ -16,6 +16,7 @@ interface SidebarProps {
   showSidebar?: boolean;
   onCloseSidebar?: () => void;
   onSave?: () => void;
+  onGoHome?: () => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -32,10 +33,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   showSidebar = true,
   onCloseSidebar,
   onSave,
+  onGoHome,
 }) => {
   const handleNewConversation = () => {
-    // Default to Gemini for new conversations
-    onNewConversation('gemini');
+    // Default to Cursor for new conversations
+    onNewConversation('cursor');
   };
 
   const formatDate = (timestamp: number) => {
@@ -54,7 +56,12 @@ const Sidebar: React.FC<SidebarProps> = ({
     <div className={`sidebar ${collapsed ? 'collapsed' : ''} ${isMobile ? 'mobile' : ''} ${isMobile && !showSidebar ? 'hidden' : ''}`}>
       <div className="sidebar-header">
         {!collapsed && (
-          <div className="logo">
+          <div 
+            className="logo" 
+            onClick={onGoHome}
+            style={{ cursor: onGoHome ? 'pointer' : 'default' }}
+            title={onGoHome ? "返回首页" : ""}
+          >
             <span className="logo-text">IFixAI</span>
           </div>
         )}
@@ -108,7 +115,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className="conversations-section">
         {!collapsed && <h3 className="section-title">近期对话</h3>}
         <div className="conversations-list">
-          {conversations.map(conversation => (
+          {(conversations || []).map(conversation => (
             <div
               key={conversation.id}
               className={`conversation-item ${currentConversation?.id === conversation.id ? 'active' : ''}`}

@@ -8,26 +8,35 @@
   --primary-color: #6366f1;
   --primary-hover: #4f46e5;
   --primary-light: #e0e7ff;
+  --primary-lighter: #f0f4ff;
   --secondary-color: #8b5cf6;
   --success-color: #10b981;
   --danger-color: #ef4444;
   --warning-color: #f59e0b;
-  --text-primary: #1f2937;
-  --text-secondary: #6b7280;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
   --text-tertiary: #9ca3af;
   --bg-primary: #ffffff;
   --bg-secondary: #f9fafb;
   --bg-tertiary: #f3f4f6;
+  --bg-hover: #f9fafb;
   --border-color: #e5e7eb;
   --border-hover: #d1d5db;
+  --border-light: #f3f4f6;
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-primary: 0 4px 14px 0 rgba(99, 102, 241, 0.15);
+  --shadow-primary-lg: 0 8px 24px 0 rgba(99, 102, 241, 0.2);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
   --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html, body {
@@ -57,23 +66,26 @@ body {
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
-  border-radius: 4px;
+  background: transparent;
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--text-tertiary);
-  border-radius: 4px;
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 5px;
   transition: var(--transition);
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
+  background: rgba(107, 114, 128, 0.5);
+  background-clip: padding-box;
 }
 
 /* Mobile optimizations */

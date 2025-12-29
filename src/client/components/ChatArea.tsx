@@ -1,17 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Conversation, Message } from '../types';
 import MarkdownRenderer from './MarkdownRenderer';
+import { api } from '../utils/api';
+import { extractData } from '../utils/response';
 import '../styles/components/ChatArea.css';
 
 interface ChatAreaProps {
   conversation: Conversation | null;
   messages: Message[];
-  selectedAgent: 'gemini' | 'claude' | 'qwen' | 'gpt';
+  selectedAgent: 'gemini' | 'claude' | 'qwen' | 'gpt' | 'cursor';
   selectedModel: string;
   onSendMessage: (content: string, imageUrl?: string) => void;
-  onAgentChange: (agent: 'gemini' | 'claude' | 'qwen' | 'gpt') => void;
+  onAgentChange: (agent: 'gemini' | 'claude' | 'qwen' | 'gpt' | 'cursor') => void;
   onModelChange: (model: string) => void;
-  onCreateConversation: (agentType: 'gemini' | 'claude' | 'qwen' | 'gpt', model?: string) => void;
+  onCreateConversation: (agentType: 'gemini' | 'claude' | 'qwen' | 'gpt' | 'cursor', model?: string) => void;
   connectionStatus: 'connected' | 'disconnected';
   isMobile?: boolean;
   onToggleSidebar?: () => void;
@@ -103,7 +105,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
               const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
               
               // 调用Excel分析API
-              const response = await fetch('/api/excel/analyze', {
+              const response = await fetch(api('api/excel/analyze'), {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -116,13 +118,15 @@ const ChatArea: React.FC<ChatAreaProps> = ({
               });
               
               if (response.ok) {
-                const data = await response.json();
+                const result = await response.json();
+                const data = extractData(result);
                 // 将分析结果作为消息发送
-                const analysisMessage = `📊 Excel文件分析结果：\n\n${data.analysis}`;
+                const analysisMessage = `📊 Excel文件分析结果：\n\n${data?.analysis || '分析完成'}`;
                 onSendMessage(analysisMessage);
               } else {
                 const error = await response.json();
-                alert(`Excel分析失败: ${error.error}`);
+                const errorMsg = error.message || error.error || 'Excel分析失败';
+                alert(`Excel分析失败: ${errorMsg}`);
               }
             } catch (error: any) {
               console.error('Error processing Excel:', error);
@@ -161,7 +165,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
               
               // 调用图像识别API（智能图像处理）
               const base64Data = imageData.split(',')[1] || imageData;
-              const response = await fetch('/api/image/recognize', {
+              const response = await fetch(api('api/image/recognize'), {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -173,14 +177,15 @@ const ChatArea: React.FC<ChatAreaProps> = ({
               });
               
               if (response.ok) {
-                const data = await response.json();
+                const result = await response.json();
+                const data = extractData(result);
                 // 将识别结果作为消息发送，并附带图片
-                const recognitionMessage = `🖼️ 图片识别结果：\n\n${data.description}`;
+                const recognitionMessage = `🖼️ 图片识别结果：\n\n${data?.description || '识别完成'}`;
                 onSendMessage(recognitionMessage, imageData);
               } else {
                 const error = await response.json();
                 // 即使识别失败，也显示图片预览
-                console.error('Image recognition failed:', error);
+                console.error('Image recognition failed:', error.message || error.error || error);
               }
             } catch (error: any) {
               console.error('Error processing image:', error);
@@ -290,9 +295,11 @@ const ChatArea: React.FC<ChatAreaProps> = ({
 
   const loadModels = async () => {
     try {
-      const response = await fetch(`/api/models/${selectedAgent}`);
-      const data = await response.json();
-      setAvailableModels(data.map((m: any) => ({ value: m.model_value, label: m.model_label })));
+      const response = await fetch(api(`api/models/${selectedAgent}`));
+      const result = await response.json();
+      const data = extractData(result);
+      const models = Array.isArray(data) ? data : [];
+      setAvailableModels(models.map((m: any) => ({ value: m.model_value, label: m.model_label })));
       
       // Set model based on conversation or default
       if (data.length > 0) {
@@ -322,18 +329,21 @@ const ChatArea: React.FC<ChatAreaProps> = ({
     claude: 'Claude',
     qwen: 'Qwen',
     gpt: 'GPT',
+    cursor: 'Cursor',
   };
 
   const currentModel = selectedModel || conversation?.model || availableModels[0]?.value || '';
 
-  const handleAgentChange = async (newAgent: 'gemini' | 'claude' | 'qwen' | 'gpt') => {
+  const handleAgentChange = async (newAgent: 'gemini' | 'claude' | 'qwen' | 'gpt' | 'cursor') => {
     onAgentChange(newAgent);
     // Load models for the new agent and set default
     try {
-      const response = await fetch(`/api/models/${newAgent}`);
-      const data = await response.json();
-      if (data.length > 0) {
-        const defaultModel = data.find((m: any) => m.is_default === 1) || data[0];
+      const response = await fetch(api(`api/models/${newAgent}`));
+      const result = await response.json();
+      const data = extractData(result);
+      const models = Array.isArray(data) ? data : [];
+      if (models.length > 0) {
+        const defaultModel = models.find((m: any) => m.is_default === 1) || models[0];
         onModelChange(defaultModel.model_value);
       }
     } catch (error) {
@@ -532,8 +542,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
             <input
               ref={folderInputRef}
               type="file"
-              webkitdirectory=""
-              directory=""
+              {...({ webkitdirectory: '', directory: '' } as any)}
               multiple
               style={{ display: 'none' }}
               onChange={handleFolderSelect}
@@ -559,9 +568,10 @@ const ChatArea: React.FC<ChatAreaProps> = ({
         <div className="agent-selector">
           <select
             value={selectedAgent}
-            onChange={(e) => handleAgentChange(e.target.value as 'gemini' | 'claude' | 'qwen' | 'gpt')}
+            onChange={(e) => handleAgentChange(e.target.value as 'gemini' | 'claude' | 'qwen' | 'gpt' | 'cursor')}
             className="agent-select"
           >
+            <option value="cursor">Cursor</option>
             <option value="gemini">Gemini</option>
             <option value="claude">Claude</option>
             <option value="qwen">Qwen</option>
@@ -768,8 +778,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({
         <input
           ref={folderInputRef}
           type="file"
-          webkitdirectory=""
-          directory=""
+          {...({ webkitdirectory: '', directory: '' } as any)}
           multiple
           style={{ display: 'none' }}
           onChange={handleFolderSelect}

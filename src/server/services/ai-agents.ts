@@ -3,7 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
 import { getDatabase, ApiKey } from '../models/database';
 
-export type AgentType = 'gemini' | 'claude' | 'qwen' | 'gpt';
+export type AgentType = 'gemini' | 'claude' | 'qwen' | 'gpt' | 'cursor';
 
 export interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
@@ -268,6 +268,44 @@ export async function chatWithGPT(
   }
 }
 
+// Cursor Agent
+export async function chatWithCursor(
+  messages: ChatMessage[],
+  apiKey?: string,
+  model?: string
+): Promise<ChatResponse> {
+  try {
+    // For now, Cursor uses GPT API as a fallback
+    // You can implement Cursor-specific API here if needed
+    const key = apiKey || getActiveApiKey('cursor') || getActiveApiKey('gpt');
+    if (!key) {
+      return { content: '', error: 'Cursor API key not configured' };
+    }
+
+    // Use GPT client for Cursor (or implement Cursor-specific client)
+    const client = new OpenAI({
+      apiKey: key,
+    });
+
+    const modelName = model || 'gpt-4o';
+
+    const openAIMessages = messages.map(msg => ({
+      role: msg.role === 'user' ? 'user' : msg.role === 'assistant' ? 'assistant' : 'system',
+      content: msg.content,
+    }));
+
+    const response = await client.chat.completions.create({
+      model: modelName,
+      messages: openAIMessages as any,
+      max_tokens: 4096,
+    });
+
+    return { content: response.choices[0]?.message?.content || '' };
+  } catch (error: any) {
+    return { content: '', error: error.message || 'Cursor API error' };
+  }
+}
+
 // Main chat function that routes to the appropriate agent
 export async function chatWithAgent(
   agentType: AgentType,
@@ -284,6 +322,8 @@ export async function chatWithAgent(
       return chatWithQwen(messages, apiKey, model);
     case 'gpt':
       return chatWithGPT(messages, apiKey, model);
+    case 'cursor':
+      return chatWithCursor(messages, apiKey, model);
     default:
       return { content: '', error: `Unknown agent type: ${agentType}` };
   }

@@ -137,6 +137,8 @@ function initializeDefaultModels() {
     { agent_type: 'qwen', value: 'qwen-code', label: 'Qwen Code', is_default: 1, order: 0 },
     { agent_type: 'qwen', value: 'qwen-plus', label: 'Qwen Plus', is_default: 0, order: 1 },
     { agent_type: 'qwen', value: 'qwen-turbo', label: 'Qwen Turbo', is_default: 0, order: 2 },
+    // Cursor models
+    { agent_type: 'cursor', value: 'auto', label: 'Auto', is_default: 1, order: 0 },
   ];
 
   const insert = db.prepare(`
@@ -195,7 +197,7 @@ export interface ApiKey {
 
 export interface AgentModel {
   id: string;
-  agent_type: 'gemini' | 'claude' | 'qwen' | 'gpt';
+  agent_type: 'gemini' | 'claude' | 'qwen' | 'gpt' | 'cursor';
   model_value: string;
   model_label: string;
   is_default: number;
